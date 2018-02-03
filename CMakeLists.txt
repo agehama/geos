@@ -121,23 +121,26 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 
   # General options
   set(CMAKE_C_FLAGS "-pedantic -ansi ${CMAKE_C_FLAGS}")
-
-  # Numerical stability
-  if(GEOS_ENABLE_FLOATSTORE)
-    # Remove extra precision by forcing conformance to IEEE 754 rather than IEEE 854
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffloat-store")
-  endif()
-  message(STATUS
-    "Forcing IEEE 754 using flag -ffloat-store - ${GEOS_ENABLE_FLOATSTORE}")
-
-  # Warnings specification
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -fno-implicit-inline-templates -Wconversion -pedantic -W -Wunused -Wuninitialized -Wextra -Wdouble-promotion")
-
+  
   # Turn on Position Independent Code generation for GEOS C shared library
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Wall -Wconversion -pedantic -Wmissing-prototypes -W -Wunused -Wuninitialized -Wextra -Wdouble-promotion")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wall -Wconversion -pedantic -Wmissing-prototypes -W -Wunused -Wuninitialized -Wextra -Wdouble-promotion")
 
-  # Enable glibc ISO C99 features (macros isfinite, isnan)
-  set(CMAKE_REQUIRED_DEFINITIONS "${CMAKE_REQUIRED_DEFINITIONS} -D_ISOC99_SOURCE=1")
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    # Numerical stability
+    if(GEOS_ENABLE_FLOATSTORE)
+      # Remove extra precision by forcing conformance to IEEE 754 rather than IEEE 854
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffloat-store")
+    endif()
+    message(STATUS
+      "Forcing IEEE 754 using flag -ffloat-store - ${GEOS_ENABLE_FLOATSTORE}")
+
+    # Warnings specification
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -fno-implicit-inline-templates -Wconversion -pedantic -W -Wunused -Wuninitialized -Wextra -Wdouble-promotion")
+
+    # Enable glibc ISO C99 features (macros isfinite, isnan)
+    set(CMAKE_REQUIRED_DEFINITIONS "${CMAKE_REQUIRED_DEFINITIONS} -D_ISOC99_SOURCE=1")
+  endif()
 
 elseif(MSVC)
 
@@ -231,9 +234,14 @@ endif()
 # top of the build tree rather than in hard-to-find leaf
 # directories. This simplifies manual testing and the use of the build
 # tree rather than installed Boost libraries.
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
 ################################################################################
 # Setup include directories
@@ -259,9 +267,10 @@ include_directories(${PROJECT_BINARY_DIR})
 find_package(Git)
 
 message(STATUS "Generating GEOS ${PROJECT_BINARY_DIR}/geos_revision.h")
-file(WRITE ${CMAKE_BINARY_DIR}/geos_revision.h.in "\#define GEOS_REVISION \"@GEOS_REVISION@\"\n")
-
-file(WRITE ${CMAKE_BINARY_DIR}/geos_revision.cmake
+#file(WRITE ${CMAKE_BINARY_DIR}/geos_revision.h.in "\#define GEOS_REVISION \"@GEOS_REVISION@\"\n")
+#file(WRITE ${CMAKE_BINARY_DIR}/geos_revision.cmake
+file(WRITE ${PROJECT_BINARY_DIR}/geos_revision.h.in "\#define GEOS_REVISION \"@GEOS_REVISION@\"\n")
+file(WRITE ${PROJECT_BINARY_DIR}/geos_revision.cmake
 "
 execute_process(COMMAND \${GIT} describe --tags --always
   WORKING_DIRECTORY \${CWD}
@@ -349,8 +358,10 @@ configure_file("${PROJECT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
   "${PROJECT_BINARY_DIR}/cmake/cmake_uninstall.cmake"
   IMMEDIATE @ONLY)
 
-add_custom_target(uninstall
-  "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/cmake/cmake_uninstall.cmake")
+if(NOT TARGET uninstall) 
+  add_custom_target(uninstall
+    "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/cmake/cmake_uninstall.cmake")
+endif()
 
 #################################################################################
 # DEBUG settings - TODO: make a summary
