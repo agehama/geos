@@ -42,7 +42,7 @@ if(NOT GEOS_ENABLE_MACOSX_FRAMEWORK)
 
 endif()
 
-add_dependencies(geos_c geos_revision)
+add_dependencies(geos_c geos geos_revision)
 
 #################################################################################
 # Installation
