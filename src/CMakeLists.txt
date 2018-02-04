@@ -82,7 +82,7 @@ else()
     set_target_properties(geos-static
       PROPERTIES
       OUTPUT_NAME "geos"
-      PREFIX "lib"
+      PREFIX ""
       CLEAN_DIRECT_OUTPUT 1)
 
     install(TARGETS geos-static
