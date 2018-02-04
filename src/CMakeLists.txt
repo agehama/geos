@@ -79,11 +79,19 @@ else()
   if(GEOS_BUILD_STATIC)
     add_library(geos-static STATIC ${geos_SOURCES} ${geos_ALL_HEADERS})
 
-    set_target_properties(geos-static
-      PROPERTIES
-      OUTPUT_NAME "geos"
-      PREFIX ""
-      CLEAN_DIRECT_OUTPUT 1)
+    if(MSVC)
+      set_target_properties(geos-static
+        PROPERTIES
+        OUTPUT_NAME "geos"
+        PREFIX ""
+        CLEAN_DIRECT_OUTPUT 1)
+    else()
+      set_target_properties(geos-static
+        PROPERTIES
+        OUTPUT_NAME "geos"
+        PREFIX "lib"
+        CLEAN_DIRECT_OUTPUT 1)
+    endif()
 
     install(TARGETS geos-static
       RUNTIME DESTINATION bin
