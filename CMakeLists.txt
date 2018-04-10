@@ -279,6 +279,9 @@ execute_process(COMMAND \${GIT} describe --tags --always
 configure_file(\${SRC} \${DST} @ONLY)
 ")
 
+message("Geos Build CMAKE_C_FLAGS - ${CMAKE_C_FLAGS}")
+message("Geos Build CMAKE_CXX_FLAGS - ${CMAKE_CXX_FLAGS}")
+
 add_custom_target(geos_revision
   COMMAND ${CMAKE_COMMAND}
     -D CWD=${CMAKE_CURRENT_SOURCE_DIR}
