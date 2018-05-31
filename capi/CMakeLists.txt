@@ -45,26 +45,6 @@ endif()
 add_dependencies(geos_c geos-static geos_revision)
 
 #################################################################################
-# Installation
-#################################################################################
-
-if(APPLE AND GEOS_ENABLE_MACOSX_FRAMEWORK)
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/geos_c.h
-    DESTINATION GEOS.framework/Versions/${VERSION_MAJOR}/Headers)
-  install(CODE "execute_process(COMMAND sed -E -i \"\" \"s,# *include[[:space:]]+<geos/,#include <GEOS/,g\" \"$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/GEOS.framework/Versions/${VERSION_MAJOR}/Headers/geos_c.h\")")
-else()
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/geos_c.h
-    DESTINATION include)
-endif()
-
-if(NOT GEOS_ENABLE_MACOSX_FRAMEWORK)
-  install(TARGETS geos_c
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib)
-endif()
-
-#################################################################################
 # Group source files for IDE source explorers (e.g. Visual Studio)
 #################################################################################
 

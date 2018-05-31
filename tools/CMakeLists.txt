@@ -30,11 +30,6 @@ if(UNIX OR MINGW)
   if(installdest)
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/geos-config.in
                    ${CMAKE_CURRENT_BINARY_DIR}/geos-config @ONLY)
-  
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/geos-config
-      DESTINATION ${installdest}
-      PERMISSIONS
-      OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 endif()
 
 endif()

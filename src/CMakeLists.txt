@@ -41,22 +41,12 @@ if(GEOS_ENABLE_MACOSX_FRAMEWORK)
     MACOSX_FRAMEWORK_SHORT_VERSION_STRING ${VERSION}
     MACOSX_FRAMEWORK_IDENTIFIER org.osgeo.geos)
 
-  install(TARGETS GEOS FRAMEWORK DESTINATION .)
-
   if(GEOS_ENABLE_MACOSX_FRAMEWORK_UNIXCOMPAT)
     # Unix compatibility option, provides typical bin/lib/include folder
     # structure for framework-challenged projects
 
     set(GEOS_FWDIR "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/GEOS.framework")
     set(GEOS_FWDIR_VER "${GEOS_FWDIR}/Versions/${VERSION_MAJOR}")
-    install(CODE "execute_process(COMMAND mkdir -p \"${GEOS_FWDIR_VER}/unix/bin\")")
-    install(CODE "execute_process(COMMAND mkdir -p \"${GEOS_FWDIR_VER}/unix/include\")")
-    install(CODE "execute_process(COMMAND mkdir -p \"${GEOS_FWDIR_VER}/unix/lib\")")
-    install(CODE "execute_process(COMMAND ln -sfh ../../Headers \"${GEOS_FWDIR_VER}/unix/include/geos\")")
-    install(CODE "execute_process(COMMAND ln -sf ../../Headers/geos_c.h \"${GEOS_FWDIR_VER}/unix/include/geos_c.h\")")
-    install(CODE "execute_process(COMMAND ln -sf ../../GEOS \"${GEOS_FWDIR_VER}/unix/lib/libgeos.dylib\")")
-    install(CODE "execute_process(COMMAND ln -sf ../../GEOS \"${GEOS_FWDIR_VER}/unix/lib/libgeos_c.dylib\")")
-    install(CODE "execute_process(COMMAND ln -sfh Versions/Current/unix \"${GEOS_FWDIR}/unix\")")
   endif()
 
 else()
@@ -69,11 +59,6 @@ else()
       DEFINE_SYMBOL GEOS_DLL_EXPORT
       VERSION ${VERSION}
       CLEAN_DIRECT_OUTPUT 1)
-
-    install(TARGETS geos
-      RUNTIME DESTINATION bin
-      LIBRARY DESTINATION lib
-      ARCHIVE DESTINATION lib)
   endif()
 
   if(GEOS_BUILD_STATIC)
@@ -92,12 +77,6 @@ else()
         PREFIX "lib"
         CLEAN_DIRECT_OUTPUT 1)
     endif()
-
-    install(TARGETS geos-static
-      RUNTIME DESTINATION bin
-      LIBRARY DESTINATION lib
-      ARCHIVE DESTINATION lib)
-
   endif()
 
 endif() # (GEOS_ENABLE_MACOSX_FRAMEWORK)
