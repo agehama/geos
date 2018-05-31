@@ -354,14 +354,6 @@ add_subdirectory(tests)
 add_subdirectory(tools)
 
 #################################################################################
-# Install/Uninstall
-#################################################################################
-
-configure_file("${PROJECT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
-  "${PROJECT_BINARY_DIR}/cmake/cmake_uninstall.cmake"
-  IMMEDIATE @ONLY)
-
-#################################################################################
 # DEBUG settings - TODO: make a summary
 
 message(STATUS "CMake ${CMAKE_VERSION} successfully configured ${PROJECT_NAME} using ${CMAKE_GENERATOR} generator")
